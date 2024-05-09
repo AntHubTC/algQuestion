@@ -1,4 +1,4 @@
-package com.tc.alg.dfs;
+package com.tc.alg.derivation;
 
 import com.tc.datastruct.TreeNode;
 import com.tc.utl.Utils;
