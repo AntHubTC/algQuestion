@@ -6,7 +6,7 @@ public class JFrameShow {
     private JFrame frame;
 
     public JFrameShow(JPanel jPanel) {
-        JFrame frame = new JFrame("Grid Visualizer");
+        JFrame frame = new JFrame("Data Visualizer");
         frame.getContentPane().add(jPanel);
         frame.pack();
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

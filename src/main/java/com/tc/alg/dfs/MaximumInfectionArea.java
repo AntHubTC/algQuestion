@@ -1,9 +1,8 @@
 package com.tc.alg.dfs;
 
+import com.tc.utl.Utils;
 import com.tc.viewer.GridVisualizer;
 import com.tc.viewer.JFrameShow;
-
-import java.util.concurrent.TimeUnit;
 
 public class MaximumInfectionArea {
     public static void main(String[] args) {
@@ -31,8 +30,8 @@ public class MaximumInfectionArea {
         jFrameShow.show();
 
         // 开启gif记录
-        visualizer.startGif("D:\\githubRepository\\algQuestion\\src\\main\\resources\\out_img\\MaximumInfectionArea.gif");
-        sleepSeconds(2L);
+        visualizer.startGif("MaximumInfectionArea.gif");
+        Utils.sleepMilliSeconds(200L);
 
         // 输出最大感染区的面积
         int maxInfectionArea = maxInfectionArea(grid, visualizer);
@@ -40,7 +39,7 @@ public class MaximumInfectionArea {
 
         // 完成gif记录
         visualizer.finishGif();
-        jFrameShow.close();
+        //jFrameShow.close();
     }
 
     // 走过的感染区域
@@ -71,9 +70,9 @@ public class MaximumInfectionArea {
             return 0;
         }
 
-        sleepSeconds(1L);
+        Utils.sleepSeconds(1L);
         grid[row][col] = FLAG_OVER; // 走过的位置，标记为未感染
-        visualizer.updateGrid(grid);
+        visualizer.refreshShow();
 
         int area = 1;
         area += dfs(grid, row, col - 1, visualizer);
@@ -83,11 +82,4 @@ public class MaximumInfectionArea {
         return area;
     }
 
-    private static void sleepSeconds(long timeout) {
-        try {
-            TimeUnit.SECONDS.sleep(timeout);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-    }
 }
