@@ -25,7 +25,8 @@ public class TreeTextVisualizer extends GifRecorderJPanel {
         paintTree(Collections.singletonList(treeNode), 1, g, 10);
     }
 
-    private void paintTree(List<TreeNode> treeNodes, int level, Graphics g, int startY) {
+    private int paintTree(List<TreeNode> treeNodes, int level, Graphics g, int startY) {
+        int startY0 = startY;
         for (TreeNode node : treeNodes) {
             startY += 50;
 
@@ -35,8 +36,10 @@ public class TreeTextVisualizer extends GifRecorderJPanel {
             g.setFont(font);
             g.drawString(node.getName(), 35 * level, startY);
 
-            paintTree(node.getTreeNodes(), level + 1, g, startY);
+            startY += paintTree(node.getTreeNodes(), level + 1, g, startY);
         }
+
+        return startY - startY0;
     }
 
     public TreeNode getTreeNode() {

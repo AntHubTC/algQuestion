@@ -15,6 +15,14 @@ public class TreeNode {
      */
     private String name;
     /**
+     * 数的级别
+     */
+    private Integer level = 1;
+    /**
+     * 父节点
+     */
+    private TreeNode parent;
+    /**
      * 树子节点
      */
     private List<TreeNode> treeNodes;
@@ -45,8 +53,19 @@ public class TreeNode {
         this.name = name;
     }
 
-    public void addChild(TreeNode treeNode) {
+    public TreeNode addChild(TreeNode treeNode) {
+        treeNode.setLevel(getLevel()+1);
+        treeNode.setParent(this);
         this.treeNodes.add(treeNode);
+        return this;
+    }
+
+    public Integer getLevel() {
+        return level;
+    }
+
+    public void setLevel(Integer level) {
+        this.level = level;
     }
 
     public List<TreeNode> getTreeNodes() {
@@ -55,6 +74,14 @@ public class TreeNode {
 
     public void setTreeNodes(List<TreeNode> treeNodes) {
         this.treeNodes = treeNodes;
+    }
+
+    public TreeNode getParent() {
+        return parent;
+    }
+
+    public void setParent(TreeNode parent) {
+        this.parent = parent;
     }
 
     @Override
