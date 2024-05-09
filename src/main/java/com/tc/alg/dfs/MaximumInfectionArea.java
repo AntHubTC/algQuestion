@@ -1,8 +1,8 @@
 package com.tc.alg.dfs;
 
 import com.tc.viewer.GridVisualizer;
+import com.tc.viewer.JFrameShow;
 
-import javax.swing.*;
 import java.util.concurrent.TimeUnit;
 
 public class MaximumInfectionArea {
@@ -26,7 +26,10 @@ public class MaximumInfectionArea {
 
 
         // 算法格子可视化
-        GridVisualizer visualizer = getGridVisualizer(grid);
+        GridVisualizer visualizer = new GridVisualizer(grid);
+        JFrameShow jFrameShow = new JFrameShow(visualizer);
+        jFrameShow.show();
+
         // 开启gif记录
         visualizer.startGif("D:\\githubRepository\\algQuestion\\src\\main\\resources\\out_img\\MaximumInfectionArea.gif");
         sleepSeconds(2L);
@@ -37,6 +40,7 @@ public class MaximumInfectionArea {
 
         // 完成gif记录
         visualizer.finishGif();
+        jFrameShow.close();
     }
 
     // 走过的感染区域
@@ -45,17 +49,6 @@ public class MaximumInfectionArea {
     public static final int FLAG_YES = 1;
     // 未感染区域
     public static final int FLAG_NO = 0;
-
-    private static GridVisualizer getGridVisualizer(int[][] grid) {
-        JFrame frame = new JFrame("Grid Visualizer");
-        GridVisualizer visualizer = new GridVisualizer(grid);
-        frame.getContentPane().add(visualizer);
-        frame.pack();
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setLocationRelativeTo(null);
-        frame.setVisible(true);
-        return visualizer;
-    }
 
     private static int maxInfectionArea(int[][] grid, GridVisualizer visualizer) {
         int maxArea = 0;
