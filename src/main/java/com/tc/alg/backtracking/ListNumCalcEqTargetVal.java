@@ -40,7 +40,6 @@ public class ListNumCalcEqTargetVal {
     public static final int TARGET_RESULT_VAL = 24;
     // 浮点数中误差小于 1e-6 (10的负十六次方)可以认为是相等。
     static final double EPSILON = 1e-6;
-    static final int ADD = 0, MULTIPLY = 1, SUBTRACT = 2, DIVIDE = 3;
 
 
     public static void main(String[] args) {
@@ -72,11 +71,10 @@ public class ListNumCalcEqTargetVal {
      *      加法和乘法都满足交换律，因此如果选择的运算操作是加法或乘法，则对于选出的 222 个数字不需要考虑不同的顺序，在遇到第二种顺序时可以不进行运算，直接跳过。
      */
     public static boolean judgePoint24_backtracking(int[] nums) {
-        List<Double> list = new ArrayList<>();
-        for (int num : nums) {
-            list.add((double) num);
+        Double[] list = new Double[nums.length];
+        for (int i = 0; i < nums.length; i++) {
+            list[i] = (double) nums[i];
         }
-
         return solve_backtracking(list);
     }
 
@@ -84,59 +82,45 @@ public class ListNumCalcEqTargetVal {
      * 使用回溯法解决给定列表中数字的组合问题，尝试通过加减乘除四种运算符找到一个组合，
      * 使得结果接近目标值TARGET_RESULT_VAL。
      *
-     * @param list 包含一系列双精度浮点数的列表。
+     * @param nums 包含一系列双精度浮点数的列表。
      * @return 如果找到一个组合，其计算结果与目标值的差小于EPSILON，则返回true；否则返回false。
      */
-    private static boolean solve_backtracking(List<Double> list) {
+    private static boolean solve_backtracking(Double[] nums) {
         // 当列表中只有一个元素时，检查该元素是否接近目标结果
-        if (list.size() == 1) {
-            return Math.abs(list.get(0) - TARGET_RESULT_VAL) < EPSILON;
+        if (nums.length == 1) {
+            return Math.abs(nums[0] - TARGET_RESULT_VAL) < EPSILON;
         }
 
-        int size = list.size();
         // 遍历列表中的每对元素（不包括相同的元素），尝试所有可能的运算操作
-        for (int i = 0; i < size; i++) {
-            for (int j = 0; j < size; j++) {
+        for (int i = 0; i < nums.length; i++) {
+            for (int j = 0; j < nums.length; j++) {
                 if (i != j) {
-                    List<Double> nextList = new ArrayList<Double>();
+                    Double[] nextNums = new Double[nums.length - 1];
                     // 从原列表中去除当前选择的两个元素
-                    for (int k = 0; k < size; k++) {
+                    for (int k = 0, pos = 0; k < nums.length; k++) {
                         if (k != i && k != j) {
-                            nextList.add(list.get(k));
+                            nextNums[pos++] = nums[k];
                         }
                     }
-                    // 尝试四种运算操作，并回溯搜索结果
-                    for (int k = 0; k < 4; k++) {
-                        // 控制加减乘除的顺序，避免重复计算
-                        if (k < 2 && i > j) {
-                            continue;
-                        }
-                        // 执行四种运算，并根据运算结果继续回溯搜索
-                        if (k == ADD) {
-                            nextList.add(list.get(i) + list.get(j));
-                        } else if (k == MULTIPLY) {
-                            nextList.add(list.get(i) * list.get(j));
-                        } else if (k == SUBTRACT) {
-                            nextList.add(list.get(i) - list.get(j));
-                        } else if (k == DIVIDE) {
-                            // 避免除以零的情况
-                            if (Math.abs(list.get(j)) < EPSILON) {
-                                continue;
-                            } else {
-                                nextList.add(list.get(i) / list.get(j));
-                            }
-                        }
-                        // 如果通过运算得到的结果接近目标值，则返回true
-                        if (solve_backtracking(nextList)) {
-                            return true;
-                        }
-                        // 回溯，移除最后一个添加的元素
-                        nextList.remove(nextList.size() - 1);
+                    for (double num : calculate(nums[i], nums[j])) {
+                        nextNums[nextNums.length - 1] = num;
+                        if (solve_backtracking(nextNums)) return true;
                     }
                 }
             }
         }
         // 如果无法找到任何组合满足条件，则返回false
         return false;
+    }
+
+    private static List<Double> calculate(double a, double b) {
+        List<Double> list = new ArrayList<>();
+        list.add(a + b);
+        list.add(a - b);
+        list.add(b - a);
+        list.add(a * b);
+        if (!(Math.abs(b) < EPSILON)) list.add(a / b);
+        if (!(Math.abs(a) < EPSILON)) list.add(b / a);
+        return list;
     }
 }
