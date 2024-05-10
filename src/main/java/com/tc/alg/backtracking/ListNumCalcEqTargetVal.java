@@ -59,13 +59,13 @@ public class ListNumCalcEqTargetVal {
      * 因此，一共有 12×4×6×4×2×4=921612 种不同的可能性。
      *
      * 可以通过回溯的方法遍历所有不同的可能性。具体做法是，使用一个列表存储目前的全部数字，每次从列表中选出 2 个数字，再选择一种运算操作，用计算得到的结果取代
-     * 选出的 2 个数字，这样列表中的数字就减少了 1 个。重复上述步骤，直到列表中只剩下 111 个数字，这个数字就是一种可能性的结果，如果结果等于 24
+     * 选出的 2 个数字，这样列表中的数字就减少了 1 个。重复上述步骤，直到列表中只剩下 1 个数字，这个数字就是一种可能性的结果，如果结果等于 24
      * 则说明可以通过运算得到 24。如果所有的可能性的结果都不等于 24，则说明无法通过运算得到 24。
      *
      * 实现时，有一些细节需要注意。
      *
      * 除法运算为实数除法，因此结果为浮点数，列表中存储的数字也都是浮点数。在判断结果是否等于 24 时应考虑精度误差，这道题中，误差小于 1e-6 (10的负十六次方)可以认为是相等。
-     * 进行除法运算时，除数不能为 0，如果遇到除数为 0 的情况，则这种可能性可以直接排除。由于列表中存储的数字是浮点数，因此判断除数是否为 000 时应考虑精度误差，这道题中，当一个数字的绝对值小于 v
+     * 进行除法运算时，除数不能为 0，如果遇到除数为 0 的情况，则这种可能性可以直接排除。由于列表中存储的数字是浮点数，因此判断除数是否为 0 时应考虑精度误差，这道题中，当一个数字的绝对值小于 1e-6
      * 时，可以认为该数字等于 0。
      *
      * 还有一个可以优化的点。
@@ -98,11 +98,11 @@ public class ListNumCalcEqTargetVal {
         for (int i = 0; i < size; i++) {
             for (int j = 0; j < size; j++) {
                 if (i != j) {
-                    List<Double> list2 = new ArrayList<Double>();
+                    List<Double> nextList = new ArrayList<Double>();
                     // 从原列表中去除当前选择的两个元素
                     for (int k = 0; k < size; k++) {
                         if (k != i && k != j) {
-                            list2.add(list.get(k));
+                            nextList.add(list.get(k));
                         }
                     }
                     // 尝试四种运算操作，并回溯搜索结果
@@ -113,25 +113,25 @@ public class ListNumCalcEqTargetVal {
                         }
                         // 执行四种运算，并根据运算结果继续回溯搜索
                         if (k == ADD) {
-                            list2.add(list.get(i) + list.get(j));
+                            nextList.add(list.get(i) + list.get(j));
                         } else if (k == MULTIPLY) {
-                            list2.add(list.get(i) * list.get(j));
+                            nextList.add(list.get(i) * list.get(j));
                         } else if (k == SUBTRACT) {
-                            list2.add(list.get(i) - list.get(j));
+                            nextList.add(list.get(i) - list.get(j));
                         } else if (k == DIVIDE) {
                             // 避免除以零的情况
                             if (Math.abs(list.get(j)) < EPSILON) {
                                 continue;
                             } else {
-                                list2.add(list.get(i) / list.get(j));
+                                nextList.add(list.get(i) / list.get(j));
                             }
                         }
                         // 如果通过运算得到的结果接近目标值，则返回true
-                        if (solve_backtracking(list2)) {
+                        if (solve_backtracking(nextList)) {
                             return true;
                         }
                         // 回溯，移除最后一个添加的元素
-                        list2.remove(list2.size() - 1);
+                        nextList.remove(nextList.size() - 1);
                     }
                 }
             }
